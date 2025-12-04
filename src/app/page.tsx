@@ -1,18 +1,29 @@
+"use client";
 /**
  * @file page.tsx
  * @description GettUpp Landing Page - Hero + ROI Math + Pricing
  * @module app/page
  */
 
+import { motion } from 'framer-motion';
 import { MagneticButton, H1, H2, Body, Small } from '@/components/ui';
 import { PricingCard } from '@/components/ui/PricingCard';
 import { RoiMath } from '@/components/sections/RoiMath';
+import { FounderSection } from '@/components/sections/FounderSection';
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
+import { GettUppGirlsSection } from '@/components/sections/GettUppGirlsSection';
+import { EditingOnlySection } from '@/components/sections/EditingOnlySection';
+import { GalleryPreviewSection } from '@/components/sections/GalleryPreviewSection';
 import { getAllTiers } from '@/lib/constants/pricing';
-import { Shield, Clock, MapPin, Zap, Camera, Users } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
   const tiers = getAllTiers();
+
+  const heroVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
 
   return (
     <main className="min-h-screen bg-brand-ink">
@@ -20,60 +31,83 @@ export default function Home() {
       {/* HERO SECTION */}
       {/* ============================================ */}
       <section className="relative px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-6xl text-center">
+        <motion.div
+          className="mx-auto max-w-6xl text-center"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+        >
           {/* Headline */}
-          <H1 className="mb-6 text-4xl md:text-6xl lg:text-7xl">
-            We don&apos;t just post.
-            <br />
-            <span className="text-white">We pack venues.</span>
-          </H1>
+          <motion.div variants={heroVariants}>
+            <H1 className="mb-6 text-4xl md:text-6xl lg:text-7xl">
+              OWN THE <span className="text-gold-gradient">NIGHT</span>
+            </H1>
+          </motion.div>
 
-          {/* Subheadline */}
-          <Body className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
-            24-72h delivery. Real ROI. Zero excuses.
-          </Body>
+          {/* Subheadline & CTAs */}
+          <motion.div variants={heroVariants}>
+            <Body className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
+              We don&apos;t just post. We pack venues.
+              <br />
+              Energy. Consistency. Measurable Results.
+            </Body>
+          </motion.div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <Link href="/pilot-intake">
-              <MagneticButton size="lg" variant="gold">
-                Start Your Pilot ($345)
-              </MagneticButton>
-            </Link>
-            <Link href="#pricing">
-              <MagneticButton size="lg" variant="outline">
-                View Pricing
-              </MagneticButton>
-            </Link>
-          </div>
+          <motion.div variants={heroVariants}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+              <Link href="/pilot-intake">
+                <MagneticButton size="lg" variant="gold">
+                  Start The Pilot
+                </MagneticButton>
+              </Link>
+              <Link href="/gallery">
+                <MagneticButton size="lg" variant="outline">
+                  View Work
+                </MagneticButton>
+              </Link>
+            </div>
+          </motion.div>
 
-          {/* Proof Chips */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-            <ProofChip icon={<Zap className="w-4 h-4 text-brand-gold" />} text="79.7K views (90 days)" />
-            <ProofChip icon={<Clock className="w-4 h-4" />} text="24-72h delivery" />
-            <ProofChip icon={<MapPin className="w-4 h-4" />} text="Minneapolis specialist" />
-          </div>
-
-          {/* Social Proof Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-            <StatBadge icon={<Zap className="w-4 h-4" />} text="99.2% On-Time Delivery" />
-            <StatBadge icon={<Camera className="w-4 h-4" />} text="≤2.3 Min/Photo Edit" />
-            <StatBadge icon={<Users className="w-4 h-4" />} text="6-10 Venues Weekly" />
-          </div>
-
-          {/* Trust Strip */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
-            <TrustBadge icon={<Shield className="w-4 h-4" />} text="Stripe Verified" />
-            <TrustBadge text="Non-exclusive license" />
-            <TrustBadge text="MN tax aligned" />
-          </div>
-        </div>
+          {/* Trust Bar */}
+          <motion.div variants={heroVariants}>
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
+              <TrustBadge text="Trusted by 12+ Minneapolis Venues" />
+              <TrustBadge text="500+ Shoots Completed" />
+              <TrustBadge text="99.2% On-Time Record" />
+            </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ============================================ */}
       {/* ROI MATH SECTION */}
       {/* ============================================ */}
       <RoiMath />
+
+      {/* ============================================ */}
+      {/* FOUNDER SECTION */}
+      {/* ============================================ */}
+      <motion.div variants={heroVariants}><FounderSection /></motion.div>
+
+      {/* ============================================ */}
+      {/* TESTIMONIALS SECTION */}
+      {/* ============================================ */}
+      <motion.div variants={heroVariants}><TestimonialsSection /></motion.div>
+
+      {/* ============================================ */}
+      {/* GETTUPP GIRLS SECTION */}
+      {/* ============================================ */}
+      <motion.div variants={heroVariants}><GettUppGirlsSection /></motion.div>
+
+      {/* ============================================ */}
+      {/* EDITING ONLY SECTION */}
+      {/* ============================================ */}
+      <motion.div variants={heroVariants}><EditingOnlySection /></motion.div>
+
+      {/* ============================================ */}
+      {/* GALLERY PREVIEW SECTION */}
+      {/* ============================================ */}
+      <motion.div variants={heroVariants}><GalleryPreviewSection /></motion.div>
 
       {/* ============================================ */}
       {/* PRICING SECTION */}
@@ -99,6 +133,12 @@ export default function Home() {
       {/* ============================================ */}
       <footer className="px-6 py-12 border-t border-white/10">
         <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h4 className="font-bold text-lg mb-2">Still Deciding?</h4>
+            <p className="text-gray-400">
+              Text &apos;VISIT&apos; to <a href="sms:555-0199" className="text-brand-gold font-bold">555-0199</a> to see us shoot live this Friday.
+            </p>
+          </div>
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
             <div>
@@ -149,28 +189,9 @@ export default function Home() {
 // Sub-components
 // ============================================
 
-function ProofChip({ icon, text }: { icon: React.ReactNode; text: string }) {
-  return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-      {icon}
-      <span className="text-sm text-white">{text}</span>
-    </div>
-  );
-}
-
-function StatBadge({ icon, text }: { icon: React.ReactNode; text: string }) {
-  return (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--brand-gold)]/10 border border-[var(--brand-gold)]/30">
-      {icon}
-      <span className="text-xs font-medium text-[var(--brand-gold)]">{text}</span>
-    </div>
-  );
-}
-
-function TrustBadge({ icon, text }: { icon?: React.ReactNode; text: string }) {
+function TrustBadge({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      {icon}
       <span>{text}</span>
     </div>
   );
