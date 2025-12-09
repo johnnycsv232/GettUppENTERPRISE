@@ -19,7 +19,7 @@ interface TypographyProps {
  */
 export function H1({ children, className = '' }: TypographyProps) {
   return (
-    <h1 className={`font-heading text-5xl font-bold text-brand-gold ${className}`}>
+    <h1 className={`font-heading text-5xl font-bold text-white ${className}`}>
       {children}
     </h1>
   );
