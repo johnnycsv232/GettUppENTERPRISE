@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Brand fonts
@@ -82,6 +83,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
       <body className="font-sans antialiased bg-brand-ink text-white min-h-screen">
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
