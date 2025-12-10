@@ -34,14 +34,14 @@ export const stripe = new Proxy({} as Stripe, {
 // ============================================
 
 /**
- * Stripe Price IDs - Replace with actual IDs from Stripe Dashboard
- * These are placeholder IDs - create actual products in Stripe
+ * Stripe Price IDs from your Stripe Dashboard
+ * These are the actual price IDs for GettUpp products
  */
 export const STRIPE_PRODUCTS = {
-  PILOT: process.env.STRIPE_PRICE_PILOT || 'price_pilot_345',
-  T1: process.env.STRIPE_PRICE_T1 || 'price_t1_445',
-  T2: process.env.STRIPE_PRICE_T2 || 'price_t2_695',
-  VIP: process.env.STRIPE_PRICE_VIP || 'price_vip_995',
+  PILOT: process.env.STRIPE_PRICE_PILOT || 'price_1SY1yqGfFr3wuAHAqmytgSsj', // $345
+  T1: process.env.STRIPE_PRICE_T1 || 'price_1SY1yqGfFr3wuAHAQhUzUNr9',       // $445
+  T2: process.env.STRIPE_PRICE_T2 || 'price_1SY1yrGfFr3wuAHAoc46u4WB',       // $695
+  VIP: process.env.STRIPE_PRICE_VIP || 'price_1SY1yrGfFr3wuAHA7cULY8Ef',     // $995
 } as const;
 
 /**
