@@ -49,15 +49,14 @@ function CheckoutContent() {
         body: JSON.stringify({
           tier: tier.id,
           email,
-          successUrl: `${window.location.origin}/checkout/success`,
-          cancelUrl: `${window.location.origin}/checkout?tier=${tier.id}`,
+          returnUrl: `${window.location.origin}/checkout/success`,
         }),
       });
 
       const data = await response.json();
 
-      if (data.url) {
-        window.location.href = data.url;
+      if (data.sessionUrl) {
+        window.location.href = data.sessionUrl;
       } else {
         throw new Error(data.error || 'Failed to create checkout session');
       }
