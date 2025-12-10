@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { adminDb } from '@/lib/firebase-admin';
 import { randomUUID } from 'crypto';
+import { secureCompare } from '@/lib/security/auth-api';
+import { checkRateLimit, getClientIp, RATE_LIMITS } from '@/lib/security/rate-limiter';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -35,11 +37,38 @@ const AGENT_DESCRIPTIONS = {
  * Queue an agent task for execution
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // Auth check
-  const authHeader = request.headers.get('authorization');
-  const expectedToken = `Bearer ${process.env.AGENT_SECRET_KEY}`;
+  // Rate limiting
+  const clientIp = getClientIp(request.headers);
+  const rateLimit = checkRateLimit(`agent:${clientIp}`, RATE_LIMITS.agents);
+  
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: 'Too many requests', retryAfter: rateLimit.resetAt.toISOString() },
+      { 
+        status: 429,
+        headers: {
+          'Retry-After': Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 1000).toString(),
+          'X-RateLimit-Remaining': '0',
+        }
+      }
+    );
+  }
 
-  if (!authHeader || authHeader !== expectedToken) {
+  // Auth check with timing-safe comparison
+  const authHeader = request.headers.get('authorization');
+  const secretKey = process.env.AGENT_SECRET_KEY;
+  
+  if (!secretKey) {
+    console.error('AGENT_SECRET_KEY not configured');
+    return NextResponse.json(
+      { error: 'Server configuration error' },
+      { status: 500 }
+    );
+  }
+
+  const expectedToken = `Bearer ${secretKey}`;
+  
+  if (!authHeader || !secureCompare(authHeader, expectedToken)) {
     return NextResponse.json(
       { error: 'Unauthorized', message: 'Invalid or missing authorization token' },
       { status: 401 }
@@ -105,11 +134,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  * Check status of an agent task
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  // Auth check
+  // Auth check with timing-safe comparison
   const authHeader = request.headers.get('authorization');
-  const expectedToken = `Bearer ${process.env.AGENT_SECRET_KEY}`;
+  const secretKey = process.env.AGENT_SECRET_KEY;
+  
+  if (!secretKey) {
+    console.error('AGENT_SECRET_KEY not configured');
+    return NextResponse.json(
+      { error: 'Server configuration error' },
+      { status: 500 }
+    );
+  }
 
-  if (!authHeader || authHeader !== expectedToken) {
+  const expectedToken = `Bearer ${secretKey}`;
+  
+  if (!authHeader || !secureCompare(authHeader, expectedToken)) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }

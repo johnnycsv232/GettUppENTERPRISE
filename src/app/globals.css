@@ -1,5 +1,4 @@
-/* Import Google Fonts - must be first */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap');
+/* Tailwind base import */
 @import "tailwindcss";
 
 /* GettUpp Brand Colors */
@@ -16,6 +15,7 @@
   --accent: var(--brand-gold);
 }
 
+/* @ts-expect-error - Tailwind v4 syntax */
 @theme inline {
   /* Brand Colors */
   --color-brand-ink: var(--brand-ink);
@@ -28,10 +28,10 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   
-  /* Typography */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Oswald', sans-serif;
-  --font-mono: var(--font-geist-mono);
+  /* Typography - uses CSS variables from next/font */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-heading: var(--font-oswald), sans-serif;
+  --font-mono: ui-monospace, monospace;
 }
 
 body {
@@ -50,3 +50,39 @@ body {
 .bg-brand-pink { background-color: var(--brand-pink); }
 .bg-brand-ink { background-color: var(--brand-ink); }
 .font-heading { font-family: var(--font-heading); }
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: var(--brand-gold);
+  color: var(--brand-ink);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--brand-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-gold);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f4d03f;
+}

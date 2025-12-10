@@ -76,7 +76,19 @@ export function getFirebaseAdmin(): typeof admin {
 }
 
 /**
- * Get Firestore Admin instance
+ * Firestore instance (spec-compliant alias)
+ * @returns {admin.firestore.Firestore} Firestore instance
+ */
+export const db = (): admin.firestore.Firestore => getFirebaseAdmin().firestore();
+
+/**
+ * Auth instance (spec-compliant alias)
+ * @returns {admin.auth.Auth} Auth instance
+ */
+export const auth = (): admin.auth.Auth => getFirebaseAdmin().auth();
+
+/**
+ * Get Firestore Admin instance (legacy alias)
  * @returns {admin.firestore.Firestore} Firestore instance
  */
 export function adminDb(): admin.firestore.Firestore {
@@ -84,7 +96,7 @@ export function adminDb(): admin.firestore.Firestore {
 }
 
 /**
- * Get Auth Admin instance
+ * Get Auth Admin instance (legacy alias)
  * @returns {admin.auth.Auth} Auth instance
  */
 export function adminAuth(): admin.auth.Auth {

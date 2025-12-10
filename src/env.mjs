@@ -22,7 +22,7 @@ const envSchema = z.object({
     .min(1, '❌ FIREBASE_ADMIN_PRIVATE_KEY not set. Add to Vercel secrets.')
     .transform(key => key.replace(/\\n/g, '\n')),
   
-  // Stripe
+  // Stripe (optional for dev, required for prod)
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string()
     .startsWith('pk_', '❌ STRIPE_PUBLISHABLE_KEY must start with pk_')
     .optional(),
@@ -33,8 +33,14 @@ const envSchema = z.object({
     .startsWith('whsec_', '❌ STRIPE_WEBHOOK_SECRET must start with whsec_')
     .optional(),
   
+  // Agent API Security
+  AGENT_SECRET_KEY: z.string()
+    .min(32, '❌ AGENT_SECRET_KEY must be at least 32 characters for security')
+    .optional(),
+  
   // App
   NEXT_PUBLIC_APP_URL: z.string().url().optional().default('http://localhost:3000'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 });
 
 /**

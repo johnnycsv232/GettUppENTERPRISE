@@ -1,90 +1,111 @@
 /**
  * @file route.ts
- * @description Stripe webhook handler for payment and subscription events
- * @module api/webhooks/stripe
+ * @description Stripe Webhook Handler - Processes successful payments and subscription updates
+ * @module app/api/webhooks/stripe
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
-import { adminDb } from '@/lib/firebase-admin';
+import { db } from '@/lib/firebase-admin';
+import { checkRateLimit, getClientIp, RATE_LIMITS } from '@/lib/security/rate-limiter';
 
-// CRITICAL: Must be Node.js runtime (not Edge) for Firebase Admin
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/**
- * POST /api/webhooks/stripe
- * Handles Stripe webhook events for payments and subscriptions
- */
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest) {
+  // Rate limiting for webhooks
+  const clientIp = getClientIp(request.headers);
+  const rateLimit = checkRateLimit(`webhook:${clientIp}`, RATE_LIMITS.webhooks);
+  
+  if (!rateLimit.success) {
+    return NextResponse.json({ error: 'Rate limited' }, { status: 429 });
+  }
+
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
 
   if (!signature) {
-    console.error('Missing stripe-signature header');
     return NextResponse.json({ error: 'No signature' }, { status: 400 });
+  }
+
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET not configured');
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
   }
 
   let event: Stripe.Event;
 
-  // Verify webhook signature
   try {
-    event = getStripe().webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    const stripe = getStripe();
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
-  const db = adminDb();
+  const firestore = db();
 
   try {
     switch (event.type) {
-      // ============================================
-      // Checkout completed - Create payment record
-      // ============================================
+      // 1. Checkout Completed -> Create Payment Record & Update Client
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         
-        // Create payment record
-        await db.collection('payments').add({
+        // Log payment
+        await firestore.collection('payments').add({
           stripeSessionId: session.id,
-          stripeCustomerId: session.customer as string,
-          amount: session.amount_total,
+          amount: session.amount_total, // in cents
           currency: session.currency,
           status: 'completed',
-          tier: session.metadata?.tier || 'unknown',
-          customerEmail: session.customer_email,
+          customerEmail: session.customer_details?.email,
+          metadata: session.metadata, // contains tier info
           createdAt: new Date(),
         });
 
-        // If this is a new customer, create client record
-        if (session.customer_email && session.metadata?.tier) {
-          const existingClient = await db.collection('clients')
-            .where('email', '==', session.customer_email)
-            .limit(1)
-            .get();
+        // If subscription, create/update client record
+        if (session.mode === 'subscription') {
+           // Logic to sync Stripe customer to Firestore 'clients' collection
+           // This connects the revenue to the CRM
+           const customerId = session.customer as string;
+           const email = session.customer_details?.email;
+           const tier = session.metadata?.tier || 'unknown';
 
-          if (existingClient.empty) {
-            await db.collection('clients').add({
-              email: session.customer_email,
-              name: session.customer_details?.name || 'Unknown',
-              stripeCustomerId: session.customer as string,
-              tier: session.metadata.tier,
-              subscriptionId: session.subscription as string || '',
-              subscriptionStatus: 'active',
-              totalShoots: 0,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              metadata: {},
-            });
-          }
+           // Upsert client based on stripeCustomerId
+           const clientsRef = firestore.collection('clients');
+           const q = clientsRef.where('stripeCustomerId', '==', customerId).limit(1);
+           const snapshot = await q.get();
+
+           if (snapshot.empty) {
+             await clientsRef.add({
+               stripeCustomerId: customerId,
+               email: email,
+               name: session.customer_details?.name || 'New Client',
+               tier: tier,
+               subscriptionStatus: 'active',
+               createdAt: new Date(),
+               totalShoots: 0
+             });
+           } else {
+             await snapshot.docs[0].ref.update({
+               tier: tier,
+               subscriptionStatus: 'active',
+               updatedAt: new Date()
+             });
+           }
+        } else if (session.metadata?.tier === 'pilot') {
+           // Handle Pilot purchase - Create a 'lead' or 'pilot' record
+           await firestore.collection('leads').add({
+             email: session.customer_details?.email,
+             name: session.customer_details?.name,
+             status: 'pilot',
+             source: 'website_checkout',
+             createdAt: new Date(),
+             notes: 'Purchased Pilot Night via Stripe'
+           });
         }
-
+        
         console.log(`✅ Checkout completed: ${session.id}`);
         break;
       }
@@ -96,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
-        const clientsSnapshot = await db.collection('clients')
+        const clientsSnapshot = await firestore.collection('clients')
           .where('stripeCustomerId', '==', customerId)
           .limit(1)
           .get();
@@ -123,7 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
-        const clientsSnapshot = await db.collection('clients')
+        const clientsSnapshot = await firestore.collection('clients')
           .where('stripeCustomerId', '==', customerId)
           .limit(1)
           .get();
@@ -148,7 +169,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const customerId = invoice.customer as string;
 
         // Log failed payment
-        await db.collection('payments').add({
+        await firestore.collection('payments').add({
           stripeInvoiceId: invoice.id,
           stripeCustomerId: customerId,
           amount: invoice.amount_due,
@@ -158,7 +179,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         });
 
         // Update client record
-        const clientsSnapshot = await db.collection('clients')
+        const clientsSnapshot = await firestore.collection('clients')
           .where('stripeCustomerId', '==', customerId)
           .limit(1)
           .get();

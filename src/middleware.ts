@@ -1,6 +1,6 @@
 /**
  * @file middleware.ts
- * @description Next.js 14 Edge Middleware for route protection
+ * @description Next.js Edge Middleware for route protection with JWT validation
  * @module middleware
  */
 
@@ -31,23 +31,50 @@ export function middleware(request: NextRequest): NextResponse {
 
   if (isProtected) {
     // Check for auth token cookie
-    const token = request.cookies.get('auth-token');
+    const token = request.cookies.get('auth-token')?.value;
 
     if (!token) {
       // No token - redirect to login
       const loginUrl = new URL('/login', request.url);
-      // Preserve the original URL for redirect after login
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Token exists - allow request
-    // Note: For MVP, we trust token existence = valid session
-    // Production: Verify token with Firebase Admin SDK in API routes
+    // Basic JWT structure validation (full validation happens server-side)
+    // JWT format: header.payload.signature
+    const jwtParts = token.split('.');
+    if (jwtParts.length !== 3) {
+      // Invalid token format - clear it and redirect
+      const response = NextResponse.redirect(new URL('/login', request.url));
+      response.cookies.delete('auth-token');
+      return response;
+    }
+
+    // Check token expiration (decode payload without verification for quick check)
+    try {
+      const payload = JSON.parse(atob(jwtParts[1]));
+      const exp = payload.exp;
+      if (exp && Date.now() >= exp * 1000) {
+        // Token expired - clear and redirect
+        const response = NextResponse.redirect(new URL('/login', request.url));
+        response.cookies.delete('auth-token');
+        return response;
+      }
+    } catch {
+      // Invalid payload - continue to server-side validation
+    }
   }
 
-  // Non-protected route or authenticated - proceed
-  return NextResponse.next();
+  // Add security headers to all responses
+  const response = NextResponse.next();
+  
+  // Security headers
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  return response;
 }
 
 /**

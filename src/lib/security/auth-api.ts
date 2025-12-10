@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '../firebase-admin';
-import { z } from 'zod';
+import { timingSafeEqual } from 'crypto';
 
 /** Authentication result type */
 interface AuthResult {
@@ -78,4 +78,27 @@ export async function withAuth(
   }
 
   return handler(authResult.uid, authResult.email);
+}
+
+/**
+ * Timing-safe comparison of two strings (prevents timing attacks)
+ * @param {string} a - First string
+ * @param {string} b - Second string
+ * @returns {boolean} True if strings match
+ */
+export function secureCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    
+    if (bufA.length !== bufB.length) {
+      // Still do comparison to maintain constant time
+      timingSafeEqual(bufA, bufA);
+      return false;
+    }
+    
+    return timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
 }

@@ -1,0 +1,50 @@
+[debug] [2025-12-10T01:44:11.651Z] ----------------------------------------------------------------------
+[debug] [2025-12-10T01:44:11.659Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\finan\AppData\Local\npm-cache\_npx\ba4f1959e38407b5\node_modules\firebase-tools\lib\bin\firebase.js init dataconnect --project gettuppent-production
+[debug] [2025-12-10T01:44:11.660Z] CLI Version:   14.27.0
+[debug] [2025-12-10T01:44:11.661Z] Platform:      win32
+[debug] [2025-12-10T01:44:11.661Z] Node Version:  v20.11.0
+[debug] [2025-12-10T01:44:11.662Z] Time:          Tue Dec 09 2025 19:44:11 GMT-0600 (Central Standard Time)
+[debug] [2025-12-10T01:44:11.663Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-10T01:44:11.671Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\finan\GettUppENTERPRISE
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[debug] [2025-12-10T01:44:12.750Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-12-10T01:44:12.752Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2025-12-10T01:44:24.629Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-10T01:44:24.630Z] > authorizing via signed-in user (financegettuppent@gmail.com)
+[debug] [2025-12-10T01:44:24.634Z] Checked if tokens are valid: true, expires at: 1765332851959
+[debug] [2025-12-10T01:44:24.635Z] Checked if tokens are valid: true, expires at: 1765332851959
+[debug] [2025-12-10T01:44:24.637Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gettuppent-production [none]
+[debug] [2025-12-10T01:44:24.948Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gettuppent-production 200
+[debug] [2025-12-10T01:44:24.949Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gettuppent-production {"projectId":"gettuppent-production","projectNumber":"633333837038","displayName":"gettuppent-production","name":"projects/gettuppent-production","resources":{"hostingSite":"gettuppent-production"},"state":"ACTIVE","etag":"1_6d8d88fb-a18b-4a76-9b68-de378382080c"}
+[info] i  Using project gettuppent-production (gettuppent-production) . 
+[info] 
+=== Dataconnect Setup
+[info] i  dataconnect: ensuring required API firebasedataconnect.googleapis.com is enabled... 
+[info] i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled... 
+[debug] [2025-12-10T01:44:24.971Z] Checked if tokens are valid: true, expires at: 1765332851959
+[debug] [2025-12-10T01:44:24.971Z] Checked if tokens are valid: true, expires at: 1765332851959
+[debug] [2025-12-10T01:44:24.972Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/gettuppent-production/locations/-/services [none]
+[debug] [2025-12-10T01:44:25.528Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/gettuppent-production/locations/-/services 200
+[debug] [2025-12-10T01:44:25.528Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/gettuppent-production/locations/-/services {}
+[info] i  : ensuring required API cloudaicompanion.googleapis.com is enabled... 
