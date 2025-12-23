@@ -1,0 +1,112 @@
+# God Mode 2.0 - Cline AI Coding Agent Rules
+
+## Project Context
+
+This is **GettUpp Enterprise** - an AI-native nightlife photography platform transitioning from God Mode 1.0 (Firebase/Vercel) to God Mode 2.0 (Edge-first, $0 architecture).
+
+### Core Stack
+- **Frontend**: Next.js 16+ (App Router, RSC)
+- **Database**: Turso (edge SQLite) + Firebase (legacy fallback)
+- **Edge Compute**: Cloudflare Workers
+- **AI Tooling**: Biome (linting), SmolVLM (on-device AI), Transformers.js
+- **Observability**: Sentry free tier
+
+### Architecture Principles
+1. **Edge-first**: 0ms cold starts, <50ms QR delivery
+2. **AI-native**: On-device processing, zero API costs
+3. **$0 budget**: All tools free tier or open source
+4. **Offline-first**: Browser WebAssembly sync
+5. **Per-venue isolation**: Horizontal scaling via isolated databases
+
+## Coding Standards
+
+### TypeScript
+- Use strict mode
+- Prefer `type` over `interface` for consistency
+- No `any` types (use `unknown` if necessary)
+- All async functions must handle errors
+
+### React/Next.js
+- Use Server Components by default
+- Client Components only when needed (user interaction, hooks)
+- Async params/searchParams in Next.js 15+ (`await params`)
+- Use `next/image` for all images (not `<img>`)
+
+### Code Organization
+- Keep components focused and reusable
+- Colocate tests with source files (`__tests__/`)
+- Use barrel exports (`index.ts`) sparingly
+
+### Performance
+- Lazy load heavy dependencies
+- Use `React.memo` for expensive renders
+- Implement pagination for large lists
+- Target <19ms database queries (Turso)
+
+## God Mode 2.0 Migration Rules
+
+### Database Strategy
+1. **Dual-write**: Write to both Firebase and Turso during migration
+2. **Read from Turso first**: Fallback to Firebase if Turso unavailable
+3. **Per-venue databases**: One Turso DB per venue for isolation
+
+### Security
+- Never commit secrets to Git
+- Use environment variables for all credentials
+- Validate all user inputs with Zod
+- Apply CSP headers (already configured)
+
+### Testing
+- Write unit tests for business logic
+- E2E tests for critical user flows (Playwright)
+- Test offline scenarios for edge functionality
+
+## Available Commands
+
+```bash
+# Development
+npm run dev                # Start Next.js dev server
+npm run lint               # Run Biome linter
+npm run lint:fix           # Fix linting issues automatically
+npm run format             # Format code with Biome
+
+# Testing
+npm run test               # Jest unit tests
+npm run test:e2e           # Playwright E2E tests
+
+# Deployment
+npm run build              # Production build
+npm run start              # Production server
+
+# Migration
+npx tsx scripts/migrate-firebase-to-turso.ts
+```
+
+## Don't Do This
+- Don't use ESLint or Prettier (migrated to Biome)
+- Don't create new Firebase collections (use Turso)
+- Don't use `<img>` tags (use `next/image`)
+- Don't ignore TypeScript errors
+- Don't make synchronous database calls in Server Components
+
+## Always Do This
+- Use Biome for linting (`npm run lint`)
+- Write tests for new features
+- Document complex logic with comments
+- Update .env.example when adding new environment variables
+- Run `npm run build` before committing to verify no build errors
+
+## Migration Phases
+
+**Current Phase**: Phase 2 - Edge Infrastructure
+- ✅ Phase 1: Security patches, Biome migration complete
+- 🔄 Phase 2: Turso client, Cloudflare Workers, migration scripts (in progress)
+- ⏳ Phase 3: On-device AI (SmolVLM, Transformers.js)
+- ⏳ Phase 4: Full AI-native architecture
+
+## Questions?
+
+Refer to:
+- Implementation plan: `artifacts/implementation_plan.md`
+- Task list: `artifacts/task.md`
+- God Mode 2.0 spec: User's original specification document

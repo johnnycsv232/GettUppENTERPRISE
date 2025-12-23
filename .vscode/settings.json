@@ -1,0 +1,11 @@
+{
+	"mcp.serverConfigFile": "mcp-servers.json",
+	"files.exclude": {
+		"**/.git": true,
+		"**/.DS_Store": true,
+		"**/.nb-gradle": true,
+		"**/node_modules": true
+	},
+	"editor.formatOnSave": true,
+	"pieces.cloudCapabilities": "Blended"
+}

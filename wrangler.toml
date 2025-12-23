@@ -1,0 +1,33 @@
+# Cloudflare Workers Configuration
+name = "gettup-enterprise-edge"
+main = "workers/qr-delivery.ts"
+compatibility_date = "2025-12-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Account settings 
+account_id = "4a3da580790a6f30d3b3678d418daa59"
+
+# Environment variables
+[vars]
+NODE_ENV = "production"
+TURSO_DATABASE_URL = "libsql://gettupp-ent-johnnycsv232.aws-us-east-2.turso.io"
+TURSO_ORG_SLUG = "johnnycsv232"
+
+# R2 Storage for assets
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "gettup-photos"
+
+# Routes
+[[routes]]
+pattern = "photos.gettup.com/*"
+zone_name = "gettup.com"
+
+# Build configuration
+[build]
+command = "npm run build"
+
+# Development
+[dev]
+port = 8787
+preview = true

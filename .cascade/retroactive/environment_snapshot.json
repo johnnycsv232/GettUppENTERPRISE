@@ -1,0 +1,44 @@
+{
+	"captured_at": "2025-12-10T07:52:00Z",
+	"node_version": "v20.x",
+	"npm_version": "10.x",
+	"os": "Windows 10/11",
+	"project_root": "c:\\Users\\finan\\GettUppENTERPRISE",
+	"git_branch": "master",
+	"git_remote": "origin/master",
+	"stack": {
+		"framework": "Next.js 16.0.8",
+		"react": "19.2.0",
+		"typescript": "5.x",
+		"tailwind": "4.x",
+		"firebase": "12.6.0",
+		"firebase-admin": "13.6.0",
+		"stripe": "20.0.0"
+	},
+	"integrations": {
+		"sanity": {
+			"project_id": "nczdqvbz",
+			"dataset": "production"
+		},
+		"firebase": {
+			"project_id": "gettuppent-production"
+		},
+		"vercel": {
+			"project": "gettupp-enterprise",
+			"team": "gettuppent-production"
+		}
+	},
+	"env_vars_documented": [
+		"NEXT_PUBLIC_FIREBASE_*",
+		"FIREBASE_ADMIN_*",
+		"STRIPE_*",
+		"SANITY_*",
+		"CAL_API_KEY",
+		"NOTION_API_KEY",
+		"CONTEXT7_API_KEY",
+		"HUGGINGFACE_API_KEY",
+		"GITHUB_TOKEN",
+		"VERCEL_TOKEN",
+		"UPSTASH_REDIS_*"
+	]
+}

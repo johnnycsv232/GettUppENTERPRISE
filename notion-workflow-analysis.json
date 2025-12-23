@@ -1,0 +1,84 @@
+{
+	"projectsSchema": {
+		"properties": [
+			"Progress",
+			"Revenue Model",
+			"Status",
+			"Notes",
+			"Next Action",
+			"Category",
+			"Target Market",
+			"Priority",
+			"Deadline",
+			"Project Name"
+		],
+		"statuses": [
+			"Not Started",
+			"Planning",
+			"In Development",
+			"Testing",
+			"Launching",
+			"Live",
+			"Paused"
+		],
+		"categories": [
+			"Content Service",
+			"Software/SaaS",
+			"AI/Tech Infrastructure",
+			"Apparel/Retail"
+		]
+	},
+	"inboxSchema": {
+		"properties": [
+			"Blocking",
+			"Source",
+			"Blocked by",
+			"AI Summary",
+			"AI Hub Placement",
+			"Layer",
+			"Notes",
+			"AI Layer",
+			"Date",
+			"Link / File",
+			"Status",
+			"Name"
+		],
+		"statuses": ["Raw", "Processed", "Linked in Hub"],
+		"sources": [
+			"Perplexity",
+			"NotebookLM",
+			"GitHub",
+			"PDF",
+			"Notion Page",
+			"Other"
+		]
+	},
+	"inboxByStatus": {
+		"Unknown": 32,
+		"Processed": 68
+	},
+	"projectsByStatus": {
+		"Planning": [
+			{
+				"name": "GettUpp Girls - Apparel Brand",
+				"id": "116a76f0-db07-42d5-b6a7-f16b267556ce"
+			},
+			{
+				"name": "AI Time Arbitrage - App Dev Service",
+				"id": "770496e5-874d-4530-8de1-822722a6c70b"
+			}
+		],
+		"Testing": [
+			{
+				"name": "GettUpp OS - Technical Platform",
+				"id": "2faab47f-5137-4258-888e-b1a7b73287ea"
+			}
+		],
+		"In Development": [
+			{
+				"name": "GettUpp ENT - Content Service",
+				"id": "5beaf7e6-0be5-491f-95ff-4ede81bd4a58"
+			}
+		]
+	}
+}

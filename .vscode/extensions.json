@@ -1,0 +1,6 @@
+{
+	"recommendations": [
+		"googlecloudtools.firebase-dataconnect-vscode",
+		"github.vscode-github-actions"
+	]
+}

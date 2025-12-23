@@ -1,0 +1,29 @@
+{
+	"indexes": [
+		{
+			"collectionGroup": "shoots",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "clientId", "order": "ASCENDING" },
+				{ "fieldPath": "scheduledDate", "order": "DESCENDING" }
+			]
+		},
+		{
+			"collectionGroup": "payments",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "clientId", "order": "ASCENDING" },
+				{ "fieldPath": "createdAt", "order": "DESCENDING" }
+			]
+		},
+		{
+			"collectionGroup": "agent_tasks",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "status", "order": "ASCENDING" },
+				{ "fieldPath": "createdAt", "order": "ASCENDING" }
+			]
+		}
+	],
+	"fieldOverrides": []
+}

@@ -1,0 +1,194 @@
+{
+	"mcpServers": {
+		"context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp@latest"],
+			"env": {
+				"CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+			},
+			"description": "Up-to-date library documentation and code examples - prevents AI hallucinations"
+		},
+		"filesystem": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+			"description": "File system operations - read, write, and manage files"
+		},
+		"git": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-git"],
+			"description": "Git repository operations - commits, branches, diffs"
+		},
+		"github": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-github"],
+			"env": {
+				"GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+			},
+			"description": "GitHub API operations - repos, issues, PRs, workflows"
+		},
+		"stripe": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@stripe/mcp", "--api-key", "${STRIPE_SECRET_KEY}"],
+			"description": "Stripe payment operations - customers, subscriptions, invoices"
+		},
+		"notion": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@notionhq/notion-mcp-server"],
+			"env": {
+				"NOTION_TOKEN": "${NOTION_API_KEY}"
+			},
+			"description": "Notion workspace operations - pages, databases, blocks"
+		},
+		"cal": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@calcom/cal-mcp"],
+			"env": {
+				"CAL_API_KEY": "${CAL_API_KEY}"
+			},
+			"description": "Cal.com calendar and booking operations - events, availability, bookings"
+		},
+		"huggingface": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@llmindset/hf-mcp-server"],
+			"env": {
+				"HF_TOKEN": "${HUGGINGFACE_API_KEY}"
+			},
+			"description": "HuggingFace model and dataset operations - inference, model hub"
+		},
+		"sanity": {
+			"type": "streamable-http",
+			"url": "https://mcp.sanity.io/",
+			"env": {
+				"SANITY_API_TOKEN": "${SANITY_API_TOKEN}",
+				"SANITY_PROJECT_ID": "${SANITY_PROJECT_ID}",
+				"SANITY_DATASET": "${SANITY_DATASET}"
+			},
+			"description": "Sanity CMS operations - content, schemas, documents"
+		},
+		"vercel": {
+			"type": "streamable-http",
+			"url": "https://mcp.vercel.com/sse",
+			"env": {
+				"VERCEL_TOKEN": "${VERCEL_TOKEN}"
+			},
+			"description": "Vercel deployment operations - projects, deployments, domains (hosted MCP)"
+		},
+		"v0": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "v0-mcp-server"],
+			"env": {
+				"V0_API_KEY": "${VERCEL_TOKEN}"
+			},
+			"description": "v0 AI component generation - React components with AI"
+		},
+		"memory": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-memory"],
+			"description": "Persistent knowledge graph memory for context retention"
+		},
+		"sequential-thinking": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+			"description": "Chain-of-thought reasoning tool for complex problem solving"
+		},
+		"puppeteer": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+			"description": "Browser automation, screenshots, and web scraping"
+		},
+		"fetch": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-fetch"],
+			"description": "HTTP requests and API interactions"
+		},
+		"brave-search": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-brave-search"],
+			"env": {
+				"BRAVE_API_KEY": "${BRAVE_API_KEY}"
+			},
+			"description": "Brave web search for real-time information"
+		},
+		"firebase": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "firebase-mcp"],
+			"env": {
+				"GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}",
+				"FIREBASE_PROJECT_ID": "${FIREBASE_PROJECT_ID}"
+			},
+			"description": "Firebase operations - Firestore, Auth, Storage"
+		},
+		"sqlite": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-sqlite"],
+			"description": "SQLite database operations for local data storage"
+		},
+		"time": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-time"],
+			"description": "Time and timezone utilities"
+		},
+		"metamcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "metatool-app"],
+			"description": "Meta MCP - Unified middleware that manages all MCP connections with GUI"
+		},
+		"pieces": {
+			"type": "sse",
+			"url": "http://localhost:39300/model_context_protocol/2024-11-05/sse",
+			"description": "Pieces OS MCP Server - Long-term memory and context for AI"
+		},
+		"mcpjungle": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@duaraghav8/mcpjungle"],
+			"description": "Self-hosted MCP Server registry for enterprise AI Agents"
+		}
+	},
+	"documentation": {
+		"setup_instructions": {
+			"step1": "Ensure Node.js >= 18 is installed",
+			"step2": "Copy .env.mcp.example to .env.mcp and fill in API keys",
+			"step3": "Source the environment: set -a; source .env.mcp; set +a (Unix) or use the PowerShell script",
+			"step4": "Test servers with: npx @modelcontextprotocol/inspector"
+		},
+		"env_file": ".env.mcp",
+		"aggregators": [
+			{
+				"name": "MetaMCP",
+				"repo": "https://github.com/metatool-ai/metatool-app",
+				"description": "Unified middleware MCP server that manages multiple MCP connections with GUI"
+			},
+			{
+				"name": "MCPJungle",
+				"repo": "https://github.com/duaraghav8/MCPJungle",
+				"description": "Self-hosted MCP Server registry for enterprise AI Agents"
+			},
+			{
+				"name": "Magg",
+				"repo": "https://github.com/sitbon/magg",
+				"description": "Meta-MCP server that acts as a universal hub for autonomous discovery and orchestration"
+			}
+		],
+		"awesomeList": "https://github.com/punkpeye/awesome-mcp-servers",
+		"mcpDirectory": "https://mcp.so"
+	}
+}

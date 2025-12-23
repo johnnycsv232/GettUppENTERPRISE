@@ -1,0 +1,15 @@
+node_modules
+.next
+.env*
+.git
+.vscode
+Dockerfile
+.dockerignore
+README.md
+npm-debug.log
+.github
+out
+build
+dist
+.terraform
+.serverless

@@ -1,0 +1,104 @@
+{
+	"decisions": [
+		{
+			"decision_id": "DEC_001",
+			"timestamp": "2025-12-03T00:00:00Z",
+			"question": "Which framework to use for the application?",
+			"options_considered": [
+				{
+					"name": "Next.js 16",
+					"pros": ["Latest features", "React 19 support", "App Router"],
+					"cons": ["Bleeding edge"]
+				},
+				{
+					"name": "Next.js 14",
+					"pros": ["Stable", "Well documented"],
+					"cons": ["Older React version"]
+				}
+			],
+			"chosen": "Next.js 16",
+			"reasoning": "Required React 19 features and latest App Router improvements",
+			"confidence": 0.9,
+			"reversible": false,
+			"impact": "HIGH",
+			"downstream_impacts": ["All components use React 19 APIs"],
+			"revisit_trigger": "Major breaking changes in Next.js"
+		},
+		{
+			"decision_id": "DEC_002",
+			"timestamp": "2025-12-03T00:00:00Z",
+			"question": "Authentication provider selection?",
+			"options_considered": [
+				{
+					"name": "Firebase Auth",
+					"pros": ["Free tier", "Easy integration", "Social logins"],
+					"cons": ["Vendor lock-in"]
+				},
+				{
+					"name": "NextAuth.js",
+					"pros": ["Framework agnostic"],
+					"cons": ["More setup required"]
+				}
+			],
+			"chosen": "Firebase Auth",
+			"reasoning": "Already using Firebase for Firestore and Storage, reduces complexity",
+			"confidence": 0.85,
+			"reversible": true,
+			"impact": "HIGH",
+			"downstream_impacts": [
+				"All API routes use Firebase Admin SDK verification"
+			],
+			"revisit_trigger": "Need for multi-provider auth system"
+		},
+		{
+			"decision_id": "DEC_003",
+			"timestamp": "2025-12-09T00:00:00Z",
+			"question": "Rate limiting strategy for serverless?",
+			"options_considered": [
+				{
+					"name": "In-memory Map",
+					"pros": ["Simple", "No dependencies"],
+					"cons": ["Fails in serverless"]
+				},
+				{
+					"name": "Upstash Redis",
+					"pros": ["Persistent", "Low latency", "Free tier"],
+					"cons": ["External dependency"]
+				}
+			],
+			"chosen": "Upstash Redis",
+			"reasoning": "Vercel functions are stateless; in-memory rate limiting doesn't work",
+			"confidence": 0.95,
+			"reversible": true,
+			"impact": "MEDIUM",
+			"downstream_impacts": [
+				"Requires UPSTASH_REDIS_REST_URL and TOKEN env vars"
+			],
+			"revisit_trigger": "Cost concerns at scale"
+		},
+		{
+			"decision_id": "DEC_004",
+			"timestamp": "2025-12-09T00:00:00Z",
+			"question": "Dashboard metrics approach?",
+			"options_considered": [
+				{
+					"name": "Full collection scan",
+					"pros": ["Simple", "Always accurate"],
+					"cons": ["O(n), expensive, slow"]
+				},
+				{
+					"name": "Aggregation documents",
+					"pros": ["O(1), cheap, fast"],
+					"cons": ["Eventual consistency"]
+				}
+			],
+			"chosen": "Aggregation documents",
+			"reasoning": "Full scans would timeout at 1000+ clients and cost $$ per dashboard load",
+			"confidence": 0.9,
+			"reversible": true,
+			"impact": "HIGH",
+			"downstream_impacts": ["All webhooks must update stats/dashboard doc"],
+			"revisit_trigger": "Need for real-time exact counts"
+		}
+	]
+}

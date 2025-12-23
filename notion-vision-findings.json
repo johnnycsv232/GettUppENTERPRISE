@@ -1,0 +1,32 @@
+{
+	"brandVision": "🏴 Brand Architecture\nThe GettUpp ecosystem is a family of brands, each with a distinct personality but unified by a common thread: speed, quality, and relentless execution.\n🎭 Brand Voices\n⚡ AI Time Arbitrage Voice\nTone: Direct. Bold. Slightly irreverent.\nWe say:\n\"We ship in days, not months.\"\n\"4-8 weeks? That's cute.\"\n\"Same quality. Fraction of the time. Do the math.\"\n\"We're not faster because we cut corners. We're faster because we eliminated the waste.\"\nWe never say:\n\"We'll try our best\"\n\"Hopefully\"\n\"It depends\"\nAnything apologetic or hedging\nSample copy:\n📸 GettUpp ENT Voice\nTone: Confident. Warm. Solutions-focused.\nWe say:\n\"Consistent content. Predictable costs. Zero headaches.\"\n\"We show up. Every time.\"\n\"Your weekend content, handled.\"\n\"Stop chasing freelancers. Start growing your brand.\"\nWe never say:\n\"We're the cheapest\"\n\"Just another photographer\"\nAnything that sounds desperate or discount-focused\nSample copy:\n💗 GettUpp Girls Voice\nTone: Playful. Confident. Aspirational.\nWe say:\n\"Own the night.\"\n\"Shot by GettUpp. Worn by you.\"\n\"Look good. Get noticed. Get tagged.\"\n\"The outfit that gets you in the photo—and the photo that gets you the followers.\"\nWe never say:\nAnything that sounds cheap or mass-market\nBody-negative language\n\"For girls who...\"—we're not limiting\nSample copy:\n🎤 J CAGE (Personal Brand Voice)\nTone: Raw. Authentic. No filter.\nWe say:\n\"Built this with 34 AI agents and way too much caffeine.\"\n\"I spent 3 years figuring this out so you don't have to.\"\n\"This is what happens when a nightlife photographer learns to code.\"\nSample copy:\n🎨 Visual Identity\nColor Palette\nTypography\nLogo Usage\nPrimary Mark: ⚡ GettUpp\nAlways capitalize the U in \"Upp\"\nLightning bolt icon is integral to the wordmark\nMinimum clear space = height of the \"G\"\nSub-brands:\nGettUpp ENT (with 📸 icon)\nGettUpp Girls (with 💗 icon)\nAI Time Arbitrage (with ⚡ or 🤖 icon)\n📝 Messaging Framework\nElevator Pitches\nGettUpp (30 seconds):\nGettUpp ENT (15 seconds):\nAI Time Arbitrage (15 seconds",
+	"projects": [
+		{
+			"name": "GettUpp Girls - Apparel Brand",
+			"status": "Planning",
+			"category": "Apparel/Retail",
+			"id": "116a76f0-db07-42d5-b6a7-f16b267556ce"
+		},
+		{
+			"name": "GettUpp OS - Technical Platform",
+			"status": "Testing",
+			"category": "AI/Tech Infrastructure",
+			"id": "2faab47f-5137-4258-888e-b1a7b73287ea"
+		},
+		{
+			"name": "GettUpp ENT - Content Service",
+			"status": "In Development",
+			"category": "Content Service",
+			"id": "5beaf7e6-0be5-491f-95ff-4ede81bd4a58"
+		},
+		{
+			"name": "AI Time Arbitrage - App Dev Service",
+			"status": "Planning",
+			"category": "Software/SaaS",
+			"id": "770496e5-874d-4530-8de1-822722a6c70b"
+		}
+	],
+	"inboxCount": 100,
+	"roadmapBlocks": 100,
+	"archBlocks": 100
+}

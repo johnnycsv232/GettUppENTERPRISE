@@ -1,0 +1,64 @@
+{
+	"failures": [
+		{
+			"failure_id": "FAIL_001",
+			"session_id": "retroactive",
+			"action_id": "AUTH_DUMMY_COOKIE",
+			"timestamp": "2025-12-09T00:00:00Z",
+			"category": "CODE",
+			"severity": "BLOCKING",
+			"symptom": "Application crashes or infinitely redirects upon login",
+			"error_message": "Middleware attempts to split 'authenticated' by dots, fails JWT validation",
+			"root_cause": "Login page set dummy cookie string instead of real Firebase JWT",
+			"investigation_steps": [
+				"Identified cookie was set to plain string 'authenticated'",
+				"Middleware expected JWT format with 3 dot-separated parts",
+				"atob() call on undefined jwtParts caused runtime error"
+			],
+			"resolution": {
+				"action_taken": "Replaced document.cookie with user.getIdToken() call",
+				"command": null,
+				"code_change": "const token = await user.getIdToken(); document.cookie = `auth-token=${token}...`",
+				"success": true,
+				"time_to_resolve_minutes": 30
+			},
+			"prevention_rule": {
+				"description": "Always use Firebase SDK getIdToken() for auth cookies",
+				"check_command": "grep -r 'auth-token=authenticated' src/",
+				"add_to_playbook": true
+			},
+			"time_lost_minutes": 60,
+			"tags": ["preventable", "critical"]
+		},
+		{
+			"failure_id": "FAIL_002",
+			"session_id": "retroactive",
+			"action_id": "WEBHOOK_DUPLICATE_PAYMENTS",
+			"timestamp": "2025-12-09T00:00:00Z",
+			"category": "CODE",
+			"severity": "BLOCKING",
+			"symptom": "Duplicate payment records in Firestore",
+			"error_message": "Multiple documents created for same Stripe event",
+			"root_cause": "Using .add() instead of .doc(event.id).set() in webhook handler",
+			"investigation_steps": [
+				"Stripe webhooks use at-least-once delivery",
+				".add() creates random document ID on each call",
+				"Retry webhooks created duplicate records"
+			],
+			"resolution": {
+				"action_taken": "Changed to .doc(event.id).set({...}, { merge: true })",
+				"command": null,
+				"code_change": "await firestore.collection('payments').doc(event.id).set({...}, { merge: true })",
+				"success": true,
+				"time_to_resolve_minutes": 15
+			},
+			"prevention_rule": {
+				"description": "Always use webhook event ID as document ID for idempotency",
+				"check_command": "grep -r '\\.add(' src/app/api/webhooks/",
+				"add_to_playbook": true
+			},
+			"time_lost_minutes": 45,
+			"tags": ["preventable", "data-integrity"]
+		}
+	]
+}

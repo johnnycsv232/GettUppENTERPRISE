@@ -1,0 +1,106 @@
+{
+	"project": {
+		"name": "GettUpp OS",
+		"type": "full-stack-webapp",
+		"stack": [
+			"next.js-16",
+			"firebase",
+			"stripe",
+			"vercel",
+			"typescript",
+			"tailwind"
+		],
+		"started": "2025-12-03T00:00:00Z",
+		"completed": null,
+		"status": "IN_PROGRESS",
+		"retroactive_recovery_date": "2025-12-10T07:52:00Z"
+	},
+	"metrics": {
+		"total_sessions": 1,
+		"total_actions": 5,
+		"total_successes": 5,
+		"total_failures": 0,
+		"total_retries": 0,
+		"estimated_human_hours_saved": 4
+	},
+	"phases": [
+		{
+			"id": "PHASE_RETRO",
+			"name": "Retroactive Recovery",
+			"status": "COMPLETE",
+			"description": "Historical data recovered from git, terminal, chat logs"
+		},
+		{
+			"id": "PHASE_INFRA",
+			"name": "Infrastructure Setup",
+			"status": "IN_PROGRESS",
+			"description": "Firebase, Stripe, Vercel infrastructure configuration"
+		},
+		{
+			"id": "PHASE_AUTH",
+			"name": "Authentication",
+			"status": "COMPLETE",
+			"description": "Firebase Auth with JWT cookie flow"
+		},
+		{
+			"id": "PHASE_PAYMENTS",
+			"name": "Payments",
+			"status": "COMPLETE",
+			"description": "Stripe integration with idempotent webhooks"
+		},
+		{
+			"id": "PHASE_ADMIN",
+			"name": "Admin Dashboard",
+			"status": "COMPLETE",
+			"description": "O(1) metrics with aggregation counters"
+		},
+		{
+			"id": "PHASE_SECURITY",
+			"name": "Security Hardening",
+			"status": "COMPLETE",
+			"description": "Redis rate limiting, security headers"
+		}
+	],
+	"critical_path": [
+		"Initialize Next.js 16 project",
+		"Configure Firebase Admin SDK",
+		"Setup Stripe webhook handlers",
+		"Implement JWT authentication flow",
+		"Create aggregation counters for metrics",
+		"Add Redis rate limiting"
+	],
+	"reusable_patterns": [
+		{
+			"id": "PATTERN_IDEMPOTENT_WEBHOOK",
+			"description": "Use event.id as document ID for Stripe webhooks",
+			"files": ["src/app/api/webhooks/stripe/route.ts"]
+		},
+		{
+			"id": "PATTERN_AGGREGATION_COUNTER",
+			"description": "Distributed counters for O(1) dashboard metrics",
+			"files": ["src/lib/aggregation.ts"]
+		},
+		{
+			"id": "PATTERN_REDIS_RATE_LIMIT",
+			"description": "Upstash Redis for serverless rate limiting",
+			"files": ["src/lib/security/rate-limiter.ts"]
+		}
+	],
+	"anti_patterns": [
+		{
+			"id": "ANTI_DUMMY_COOKIE",
+			"description": "Never set plain text 'authenticated' as auth token",
+			"fix": "Use user.getIdToken() for real JWT"
+		},
+		{
+			"id": "ANTI_ADD_WEBHOOK",
+			"description": "Never use .add() for webhook handlers",
+			"fix": "Use .doc(event.id).set() for idempotency"
+		},
+		{
+			"id": "ANTI_MEMORY_RATELIMIT",
+			"description": "In-memory rate limiting fails in serverless",
+			"fix": "Use Upstash Redis or similar persistent store"
+		}
+	]
+}

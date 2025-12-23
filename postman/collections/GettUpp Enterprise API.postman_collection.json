@@ -1,0 +1,333 @@
+{
+	"info": {
+		"name": "GettUpp Enterprise API",
+		"description": "API collection for GettUpp Enterprise - A Next.js application with Stripe payments, lead management, agent orchestration, and RAG (Retrieval-Augmented Generation) capabilities.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Checkout",
+			"description": "Stripe checkout endpoints for one-time and subscription payments",
+			"item": [
+				{
+					"name": "Create Checkout Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tier\": \"pilot\",\n  \"returnUrl\": \"{{baseUrl}}/checkout/success\",\n  \"email\": \"customer@example.com\"\n}"
+						},
+						"url": "{{baseUrl}}/api/checkout",
+						"description": "Create a Stripe checkout session. Tier options: pilot (one-time), t1, t2, vip (subscriptions)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Leads",
+			"description": "Lead capture and management endpoints",
+			"item": [
+				{
+					"name": "Create Lead",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"venueName\": \"Sample Venue\",\n  \"location\": \"Minneapolis, MN\",\n  \"contactName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"6125551234\",\n  \"preferredDate\": \"2024-02-15\",\n  \"eventType\": \"friday\",\n  \"goals\": \"Looking to increase social media presence and attract more customers\",\n  \"source\": \"website_form\"\n}"
+						},
+						"url": "{{baseUrl}}/api/leads",
+						"description": "Create a new lead from pilot intake form. Event types: friday, saturday, special. Sources: instagram_dm, website_form, referral, qr"
+					}
+				},
+				{
+					"name": "List Leads",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/leads",
+						"description": "List all leads (admin only). Returns up to 50 most recent leads."
+					}
+				}
+			]
+		},
+		{
+			"name": "Agents",
+			"description": "Agent orchestration endpoints for automated tasks",
+			"item": [
+				{
+					"name": "Run Agent Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{agentSecretKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"agentType\": \"social\",\n  \"clientId\": \"client_123\",\n  \"shootId\": \"shoot_456\",\n  \"priority\": \"normal\",\n  \"metadata\": {\n    \"customField\": \"value\"\n  }\n}"
+						},
+						"url": "{{baseUrl}}/api/agents/run",
+						"description": "Queue an agent task for execution. Agent types: social, asset, outbound, finance, strategy. Priorities: low, normal, high, urgent"
+					}
+				},
+				{
+					"name": "Get Agent Task Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{agentSecretKey}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/agents/run?taskId={{taskId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "agents", "run"],
+							"query": [
+								{
+									"key": "taskId",
+									"value": "{{taskId}}"
+								}
+							]
+						},
+						"description": "Check the status of an agent task by taskId"
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"description": "Admin dashboard and management endpoints",
+			"item": [
+				{
+					"name": "Metrics",
+					"description": "Dashboard metrics endpoints",
+					"item": [
+						{
+							"name": "Get Dashboard Metrics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}"
+									}
+								],
+								"url": "{{baseUrl}}/api/admin/metrics",
+								"description": "Fetch dashboard metrics from pre-computed aggregation counters. Returns MRR, active clients, pilots this month, conversion rate, and recent activity."
+							}
+						},
+						{
+							"name": "Recalculate Stats",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}"
+									}
+								],
+								"url": "{{baseUrl}}/api/admin/metrics",
+								"description": "Recalculate all stats from source data. WARNING: This is O(n) - only use for initialization or debugging."
+							}
+						}
+					]
+				},
+				{
+					"name": "RAG Admin",
+					"description": "RAG document indexing admin endpoints",
+					"item": [
+						{
+							"name": "Index Docs from Folder",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-agent-secret",
+										"value": "{{agentSecretKey}}"
+									}
+								],
+								"url": "{{baseUrl}}/api/admin/rag/index-docs",
+								"description": "Index all markdown documents from the docs folder. Requires agent secret key."
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "RAG",
+			"description": "Retrieval-Augmented Generation endpoints",
+			"item": [
+				{
+					"name": "Index Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"filename\": \"document.md\",\n  \"content\": \"# Document Title\\n\\nDocument content goes here...\",\n  \"contentType\": \"text/markdown\"\n}"
+						},
+						"url": "{{baseUrl}}/api/rag/index",
+						"description": "Index a single document into the RAG system. Admin access required."
+					}
+				},
+				{
+					"name": "Query RAG",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": \"What are the pricing tiers?\"\n}"
+						},
+						"url": "{{baseUrl}}/api/rag/query",
+						"description": "Query the RAG system with a natural language question. Admin access required."
+					}
+				},
+				{
+					"name": "Get RAG Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/rag/status",
+						"description": "Get the current status of the RAG system including Gemini connection and cache status. Admin access required."
+					}
+				}
+			]
+		},
+		{
+			"name": "Webhooks",
+			"description": "External service webhook handlers",
+			"item": [
+				{
+					"name": "Stripe Webhook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "stripe-signature",
+								"value": "{{stripeSignature}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {}\n  }\n}"
+						},
+						"url": "{{baseUrl}}/api/webhooks/stripe",
+						"description": "Stripe webhook handler. Handles: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted, invoice.payment_failed"
+					}
+				},
+				{
+					"name": "Notion Webhook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-agent-secret",
+								"value": "{{agentSecretKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageId\": \"notion-page-id-here\"\n}"
+						},
+						"url": "{{baseUrl}}/api/webhooks/notion",
+						"description": "Notion sync webhook. Triggers page sync to RAG system."
+					}
+				}
+			]
+		},
+		{
+			"name": "Uploadthing",
+			"description": "File upload endpoints powered by Uploadthing",
+			"item": [
+				{
+					"name": "Upload Handler (GET)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/uploadthing",
+						"description": "Uploadthing route handler - GET endpoint for file upload configuration"
+					}
+				},
+				{
+					"name": "Upload Handler (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": "{{baseUrl}}/api/uploadthing",
+						"description": "Uploadthing route handler - POST endpoint for file uploads. Supports images up to 16MB, max 50 files."
+					}
+				}
+			]
+		}
+	]
+}
